@@ -5,6 +5,7 @@ import { Navigation } from './shared/Navigation';
 import { MovieCard } from './MovieCard';
 import { Footer } from './shared/Footer';
 import { Link } from 'react-router-dom';
+import variables from './shared/variables.json';
 
 export const HomePage = () => {
 	const [apiData, setApiData] = useState({});
@@ -34,22 +35,20 @@ export const HomePage = () => {
 	const changeSearchBar = async (e) => {
 		setSearchValue(e.target.value);
 
-		const response = await fetch(
-			`${apiURL}/search/movie?api_key=${key}&page=${page}&query=${searchValue}&language=${language}`
-		);
-		const data = await response.json();
-		if (!data.errors) {
-			setApiData(data);
+		try {
+			const response = await fetch(
+				`${apiURL}/search/movie?api_key=${key}&query=${searchValue}&language=${language}`
+			);
+
+			if (response.ok) {
+				const data = await response.json();
+				setApiData(data);
+			} else if (response.status === 422) {
+				console.log('Not Found');
+			} else console.log('Something went wrong');
+		} catch (error) {
+			console.log(error);
 		}
-	};
-
-	const filterMovies = (el) => {
-		let lowerCaseTitle = el.title.toLowerCase().replace(/\s/g, '');
-		let lowerSearch = searchValue.toLowerCase().replace(/\s/g, '');
-
-		if (searchValue) return lowerCaseTitle.includes(lowerSearch);
-
-		return el;
 	};
 
 	return (
@@ -62,22 +61,28 @@ export const HomePage = () => {
 					value={searchValue}
 				/>
 				<MoviesContainer>
-					{Object.keys(apiData).length !== 0
-						? apiData.results
-								.filter((el) => filterMovies(el))
-								.map((el) => (
-									<Link state={el} to={`movie/${el.id}`} key={el.id}>
-										<MovieCard title={el.title} image={el.poster_path} />
-									</Link>
-								))
-						: 'Loading'}
+					{
+						// Wait until data is ready
+						Object.keys(apiData).length !== 0
+							? apiData.results.map(
+									(el) =>
+										// Only show elements tha has a poster
+										el.poster_path && (
+											<Link state={el} to={`movie/${el.id}`} key={el.id}>
+												<MovieCard title={el.title} image={el.poster_path} />
+											</Link>
+										)
+							  )
+							: 'Loading'
+					}
 				</MoviesContainer>
+				<Pagination>
+					<button onClick={() => changePage('prev')}>Prev</button>
+					<span>{page}</span>
+					<button onClick={() => changePage('next')}>Next</button>
+				</Pagination>
 			</main>
-			<Pagination>
-				<button onClick={() => changePage('prev')}>Prev</button>
-				<span>{page}</span>
-				<button onClick={() => changePage('next')}>Next</button>
-			</Pagination>
+
 			<Footer />
 		</section>
 	);
@@ -108,5 +113,14 @@ const MoviesContainer = styled.section`
 
 const Pagination = styled.div`
 	display: flex;
+	align-items: center;
+	justify-content: center;
 	gap: 1rem;
+	margin-top: 5rem;
+	button {
+		all: unset;
+		cursor: pointer;
+		padding: 0.5rem 1rem;
+		background-color: ${variables.colors.primary};
+	}
 `;

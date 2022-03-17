@@ -6,7 +6,7 @@ export const MovieCard = ({ title, image }) => {
 	return (
 		<Container>
 			<Image>
-				<img src={`https://image.tmdb.org/t/p/w500${image}`} />
+				<img src={`https://image.tmdb.org/t/p/w500${image}`} alt={title} />
 			</Image>
 			<Title>{title}</Title>
 		</Container>
