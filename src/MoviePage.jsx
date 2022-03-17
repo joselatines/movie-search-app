@@ -10,7 +10,6 @@ export const MoviePage = () => {
 		release_date,
 		vote_average,
 	} = state;
-	console.log(state);
 
 	return (
 		<main>

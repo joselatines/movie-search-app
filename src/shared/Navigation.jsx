@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import variables from './variables.json';
 import spain from '../assets/spain.png';
 
-export const Navigation = ({ setEndpoint }) => {
+export const Navigation = ({ setEndpoint, setLanguage }) => {
 	return (
 		<Container>
 			<div>
@@ -12,7 +12,7 @@ export const Navigation = ({ setEndpoint }) => {
 			</div>
 			<ul>
 				<FlagContainer>
-					<img src={spain} alt='React Logo' />
+					<img onClick={() => setLanguage('es')} src={spain} alt='React Logo' />
 				</FlagContainer>
 			</ul>
 		</Container>
@@ -38,4 +38,7 @@ const Container = styled.nav`
 
 const FlagContainer = styled.li`
 	width: 1.5rem;
+	img {
+		cursor: pointer;
+	}
 `;

@@ -9,16 +9,38 @@ import { Link } from 'react-router-dom';
 export const HomePage = () => {
 	const [apiData, setApiData] = useState({});
 	const [page, setPage] = useState(1);
+	const [language, setLanguage] = useState('en-US');
 	const [endpoint, setEndpoint] = useState('movie/popular');
 	const [searchValue, setSearchValue] = useState('');
 
 	const apiURL = 'https://api.themoviedb.org/3';
 	const key = '548c10d124719a62a24b2836e287daf6';
 
+	useEffect(async () => {
+		const response = await fetch(
+			`${apiURL}/${endpoint}?api_key=${key}&page=${page}&language=${language}`
+		);
+		const data = await response.json();
+
+		setApiData(data);
+	}, [page, endpoint, language]);
+
 	// Pagination
 	const changePage = (op) => {
 		if (page < apiData.total_results && op === 'next') setPage(page + 1);
 		else if (page > 1 && op === 'prev') setPage(page - 1);
+	};
+
+	const changeSearchBar = async (e) => {
+		setSearchValue(e.target.value);
+
+		const response = await fetch(
+			`${apiURL}/search/movie?api_key=${key}&page=${page}&query=${searchValue}&language=${language}`
+		);
+		const data = await response.json();
+		if (!data.errors) {
+			setApiData(data);
+		}
 	};
 
 	const filterMovies = (el) => {
@@ -30,24 +52,13 @@ export const HomePage = () => {
 		return el;
 	};
 
-	console.log(searchValue);
-
-	useEffect(async () => {
-		const response = await fetch(
-			`${apiURL}/${endpoint}?api_key=${key}&page=${page}`
-		);
-		const data = await response.json();
-
-		setApiData(data);
-	}, [page, endpoint]);
-
 	return (
 		<section>
-			<Navigation setEndpoint={setEndpoint} />
+			<Navigation setEndpoint={setEndpoint} setLanguage={setLanguage} />
 			<main>
 				<SearchBar
 					placeholder='Search something...'
-					onChange={(e) => setSearchValue(e.target.value)}
+					onChange={changeSearchBar}
 					value={searchValue}
 				/>
 				<MoviesContainer>
