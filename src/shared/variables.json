@@ -1,0 +1,14 @@
+{
+	"colors": {
+		"bg": "#130430",
+		"font": "#fff",
+		"primary": "sdssddd"
+	},
+	"font": {
+		"style": "Montserrat",
+		"bold": 600
+	},
+	"mediaQueries": {
+		"mobileM": "380px"
+	}
+}
