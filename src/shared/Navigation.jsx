@@ -3,7 +3,6 @@ import variables from './variables.json';
 import spain from '../assets/spain.png';
 
 export const Navigation = ({ setEndpoint }) => {
-	console.log(setEndpoint);
 	return (
 		<Container>
 			<div>
