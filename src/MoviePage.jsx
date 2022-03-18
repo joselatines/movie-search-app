@@ -6,6 +6,10 @@ export const MoviePage = () => {
 	const { state } = useLocation();
 	const { title, overview, poster_path, release_date, vote_average } = state;
 
+	console.log(state);
+
+	console.log(overview);
+
 	return (
 		<Container>
 			<Image>
@@ -16,8 +20,8 @@ export const MoviePage = () => {
 			</Image>
 			<Description>
 				<h1>{title ? title : 'No title'}</h1>
-				<p>{overview ? overview : 'No sinopsis'}</p>
-				<span>Release:{release_date ? release_date : 'No data'}</span>
+				<p>{overview.length !== 0 ? overview : 'No sinopsis'}</p>
+				<span>Release: {release_date ? release_date : 'No data'}</span>
 				<span>Score: {vote_average ? vote_average : 'No data'}/10</span>
 			</Description>
 			<GoHome />

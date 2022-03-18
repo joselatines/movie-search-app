@@ -9,9 +9,9 @@ import variables from './shared/variables.json';
 
 export const HomePage = () => {
 	const [apiData, setApiData] = useState({});
-	const [page, setPage] = useState(1);
-	const [language, setLanguage] = useState('en-US');
-	const [endpoint, setEndpoint] = useState('movie/popular');
+	const [page, setPage] = useState(null);
+	const [language, setLanguage] = useState('');
+	const [endpoint, setEndpoint] = useState('');
 	const [searchValue, setSearchValue] = useState('');
 
 	const apiURL = 'https://api.themoviedb.org/3';
@@ -19,7 +19,9 @@ export const HomePage = () => {
 
 	useEffect(async () => {
 		const response = await fetch(
-			`${apiURL}/${endpoint}?api_key=${key}&page=${page}&language=${language}`
+			`${apiURL}/${
+				!endpoint ? 'movie/popular' : endpoint
+			}?api_key=${key}&page=${!page ? 1 : page}&language=${language}`
 		);
 		const data = await response.json();
 
